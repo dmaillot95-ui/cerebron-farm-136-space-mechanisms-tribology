@@ -1,0 +1,4 @@
+import json,hashlib,pathlib,platform
+import math
+load=1200.;speed=.08;radius=.025;area=2e-4;pressure=load/area;sliding=2*math.pi*radius*speed;pv=pressure*sliding;wear_k=2e-8;distance=sliding*3600.;wear_volume=wear_k*load*distance;out={"load_n":load,"rev_s":speed,"contact_pressure_pa":pressure,"sliding_speed_m_s":sliding,"pv_pa_m_s":pv,"one_hour_distance_m":distance,"wear_volume_proxy_m3":wear_volume};ok=pv>0 and wear_volume>0
+out.update({"farm":136,"engine":"python-engineering-batch-canary","engine_version":platform.python_version(),"test":"BEARING_PV_LIFE_PROXY","status":"REAL_ENGINE_CANARY_OK" if ok else "FAIL","epistemic_status":"ENGINEERING_CANARY_NOT_PHYSICAL_VALIDATION"});raw=json.dumps(out,sort_keys=True).encode();out["result_sha256"]=hashlib.sha256(raw).hexdigest();pathlib.Path("artifacts").mkdir(exist_ok=True);pathlib.Path("artifacts/f136_engine_canary.json").write_text(json.dumps(out,indent=2)+"\n");print(json.dumps(out));raise SystemExit(0 if ok else 1)
